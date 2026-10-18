@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.local</groupId><artifactId>arcade-ui-check</artifactId><version>1</version>
+  <properties><maven.compiler.source>8</maven.compiler.source><maven.compiler.target>8</maven.compiler.target><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding></properties>
+  <dependencies>
+    <dependency><groupId>local.sdk</groupId><artifactId>android</artifactId><version>35</version><scope>system</scope><systemPath>${project.basedir}/../../.tools/android-sdk/platforms/android-35/android.jar</systemPath></dependency>
+    <dependency><groupId>junit</groupId><artifactId>junit</artifactId><version>4.13.2</version><scope>test</scope></dependency>
+    <dependency><groupId>org.robolectric</groupId><artifactId>robolectric</artifactId><version>4.14.1</version><scope>test</scope>
+      <exclusions>
+        <exclusion><groupId>androidx.test</groupId><artifactId>monitor</artifactId></exclusion>
+        <exclusion><groupId>androidx.test.espresso</groupId><artifactId>espresso-idling-resource</artifactId></exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
+  <build>
+    <sourceDirectory>${project.basedir}/../../app/src/main/java</sourceDirectory>
+    <testResources><testResource><directory>${project.basedir}/../../.tools/ui-test-resources</directory></testResource></testResources>
+    <plugins>
+      <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>3.13.0</version></plugin>
+      <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>3.5.2</version>
+        <configuration>
+          <argLine>-Xmx2048m --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED</argLine>
+          <systemPropertyVariables>
+            <robolectric.dependency.repo.url>https://repo.maven.apache.org/maven2</robolectric.dependency.repo.url>
+            <robolectric.dependency.dir>${project.basedir}/../../.tools/robolectric-sdk</robolectric.dependency.dir>
+            <arcade.root>${project.basedir}/../..</arcade.root>
+          </systemPropertyVariables>
+          <additionalClasspathElements>
+            <additionalClasspathElement>${project.basedir}/../../.tools/ui-test-libs/monitor/classes.jar</additionalClasspathElement>
+            <additionalClasspathElement>${project.basedir}/../../.tools/ui-test-libs/espresso/classes.jar</additionalClasspathElement>
+          </additionalClasspathElements>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

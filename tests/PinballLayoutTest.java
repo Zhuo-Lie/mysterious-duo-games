@@ -1,0 +1,9 @@
+package com.local.tapsumo;
+import java.util.ArrayDeque;
+final class PinballLayoutTest {
+    static void check(boolean ok,String text){if(!ok)throw new AssertionError(text);}
+    static double rodDistance(double x,double y,double[] r){double ux=Math.cos(r[2]),uy=Math.sin(r[2]),t=BallDuel.clamp((x-r[0])*ux+(y-r[1])*uy,-r[3],r[3]);return Math.hypot(x-r[0]-ux*t,y-r[1]-uy*t);}
+    static boolean clear(double x,double y,double[][] pillars,double[][] rods){for(double[] b:pillars)if(Math.hypot(x-b[0],y-b[1])<b[2]+13)return false;for(double[] r:rods)if(rodDistance(x,y,r)<20)return false;return true;}
+    static boolean route(double[][] pillars,double[][] rods){boolean[][] seen=new boolean[44][35];ArrayDeque<int[]> q=new ArrayDeque<int[]>();q.add(new int[]{17,0});seen[0][17]=true;while(!q.isEmpty()){int[] a=q.remove();if(a[1]==43)return true;for(int[] d:new int[][]{{1,0},{-1,0},{0,1},{0,-1}}){int x=a[0]+d[0],y=a[1]+d[1];if(x>=0&&x<35&&y>=0&&y<44&&!seen[y][x]&&clear(64+x*8,228+y*8,pillars,rods)){seen[y][x]=true;q.add(new int[]{x,y});}}}return false;}
+    public static void main(String[] args){BallDuel b=new BallDuel(BallDuel.Mode.PINBALL);for(int map=0;map<3;map++){b.map=map;for(int k=0;k<160;k++){b.clock=k*.19;double[][] pillars=b.obstacles(),rods=b.rotors();check(map!=0||rods.length==0,"Pillar layout has no rotors");check(map!=1||pillars.length==0,"Rotor layout has no pillars");check(clear(200,400,pillars,rods),"Serve area stays clear");for(double[] p:pillars){check(p[0]-p[2]-52>=32&&348-p[0]-p[2]>=32,"A ball can pass pillars along side walls");for(double[] r:rods)check(rodDistance(p[0],p[1],r)-p[2]-7>=32,"Mixed obstacles never make a tight pinch");}check(route(pillars,rods),"A ball-width route remains open throughout motion, map "+map);}}System.out.println("Pinball layouts: 480 moving snapshots passed serve clearance, open-route and pinch checks.");}
+}

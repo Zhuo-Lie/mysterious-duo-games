@@ -1,0 +1,14 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'com.local.tapsumo'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'com.local.tapsumo'
+        minSdk 23
+        targetSdk 35
+        versionCode 20
+        versionName '4.7'
+    }
+    androidResources { noCompress += ['wav'] }
+}
